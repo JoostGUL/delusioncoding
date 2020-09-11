@@ -1,0 +1,220 @@
+##########################################
+######### Create PE variables ############
+##########################################
+
+### @10
+##classification severity hallucinatons (auditory & visual)
+PEsAttentionDeficits$hal_severity10 <- NA
+PEsAttentionDeficits$hal_severity10[PEsAttentionDeficits$ysr21_9 == 0 & PEsAttentionDeficits$ysr22_9 == 0]  <- "Absent"
+PEsAttentionDeficits$hal_severity10[PEsAttentionDeficits$ysr21_9 == 1 | PEsAttentionDeficits$ysr22_9 == 1] <- "Mild"
+PEsAttentionDeficits$hal_severity10[PEsAttentionDeficits$ysr21_9 == 2 | PEsAttentionDeficits$ysr22_9 == 2]  <- "Severe"
+PEsAttentionDeficits$hal_severity10 <- ifelse(is.na(PEsAttentionDeficits$ysr21_9) | is.na(PEsAttentionDeficits$ysr22_9), NA, PEsAttentionDeficits$hal_severity10)
+barchart(PEsAttentionDeficits$hal_severity10)
+table(PEsAttentionDeficits$hal_severity10)
+# Absent   Mild Severe 
+#  2985   1013    342             (total = 4340)
+
+table(PEsAttentionDeficits$ysr21_9,PEsAttentionDeficits$ysr22_9)
+#     0    1    2
+# 0 2985  188   30
+# 1  536  289   36
+# 2   93   89   94
+# Numbers from table match hal_severity10
+
+### @14
+##rescale auditory hallucinations
+PEsAttentionDeficits$YSR_40 <- as.numeric(PEsAttentionDeficits$YSR_40)
+summary(PEsAttentionDeficits$YSR_40)
+PEsAttentionDeficits$YSR_40[PEsAttentionDeficits$YSR_40 == 1] <- 0
+PEsAttentionDeficits$YSR_40[PEsAttentionDeficits$YSR_40 == 2] <- 1
+PEsAttentionDeficits$YSR_40[PEsAttentionDeficits$YSR_40 == 3] <- 1
+PEsAttentionDeficits$YSR_40[PEsAttentionDeficits$YSR_40 == 4] <- 2
+PEsAttentionDeficits$YSR_40[PEsAttentionDeficits$YSR_40 == 5] <- 2
+table(PEsAttentionDeficits$YSR_40)
+#   0    1    2 
+# 4088  380   58 
+
+##rescale visual hallucinations
+PEsAttentionDeficits$F001077R9501_v2 <- as.numeric(PEsAttentionDeficits$F001077R9501_v2)
+summary(PEsAttentionDeficits$F001077R9501_v2)
+PEsAttentionDeficits$F001077R9501_v2[PEsAttentionDeficits$F001077R9501_v2 == 1] <- 0
+PEsAttentionDeficits$F001077R9501_v2[PEsAttentionDeficits$F001077R9501_v2 == 2] <- 1
+PEsAttentionDeficits$F001077R9501_v2[PEsAttentionDeficits$F001077R9501_v2 == 3] <- 1
+PEsAttentionDeficits$F001077R9501_v2[PEsAttentionDeficits$F001077R9501_v2 == 4] <- 2
+table(PEsAttentionDeficits$F001077R9501_v2)
+# 0      1    2 
+# 4186  271   55
+
+PEsAttentionDeficits$aud14 <- PEsAttentionDeficits$YSR_40
+PEsAttentionDeficits$vis14 <- PEsAttentionDeficits$F001077R9501_v2
+
+PEsAttentionDeficits$PEs14 <- PEsAttentionDeficits$aud14 + PEsAttentionDeficits$vis14
+
+table(PEsAttentionDeficits$aud14,PEsAttentionDeficits$vis14)
+#    0    1     2
+#0 3941  113    9
+#1  227  134   18
+#2    7   23   27
+
+##classification severity hallucinatons (auditory & visual)
+PEsAttentionDeficits$hal_severity14 <- NA
+PEsAttentionDeficits$hal_severity14[PEsAttentionDeficits$aud14 == 0 & PEsAttentionDeficits$vis14 == 0]  <- "Absent"
+PEsAttentionDeficits$hal_severity14[PEsAttentionDeficits$aud14 == 1 | PEsAttentionDeficits$vis14 == 1] <- "Mild"
+PEsAttentionDeficits$hal_severity14[PEsAttentionDeficits$aud14 == 2 | PEsAttentionDeficits$vis14 == 2]  <- "Severe"
+PEsAttentionDeficits$hal_severity14 <- ifelse(is.na(PEsAttentionDeficits$aud14) | is.na(PEsAttentionDeficits$vis14), NA, PEsAttentionDeficits$hal_severity14)
+barchart(PEsAttentionDeficits$hal_severity14)
+table(PEsAttentionDeficits$hal_severity14)
+# Absent   Mild Severe 
+#  3941    474     84         (total = 4499)
+
+## Delusions
+PEsAttentionDeficits$SUM_delusions_c_13_corrected_scaled <- as.numeric(PEsAttentionDeficits$SUM_delusions_c_13_corrected_scaled)
+summary(PEsAttentionDeficits$SUM_delusions_c_13_corrected_scaled)
+
+PEsAttentionDeficits$del14 <- PEsAttentionDeficits$SUM_delusions_c_13_corrected_scaled
+summary(PEsAttentionDeficits$del14)
+
+# Coding in SPSS:                                       # After making delusion items numberic:
+# 1 = No                                                # 1 = No
+# 1.5 = No/Yes, probably                                # 2 = No/Yes, probably
+# 2 = Yes, probably                                     # 3 = Yes, probably
+# 2.5 = Yes, probably / Yes, certainly                  # 4 = Yes, probably / Yes, certainly 
+# 3 = Yes, certainly                                    # 5 = Yes, certainly
+
+#Delusions item 1
+summary(PEsAttentionDeficits$delusions1_c_13)
+#  No             No / Yes, probably                  Yes, probably 
+# 2856                  3                                689 
+# Yes, probably / Yes, certainly                     Yes, certainly                           NA's 
+#               0                                        107                                  6247
+PEsAttentionDeficits$del_item1 <-as.numeric(PEsAttentionDeficits$delusions1_c_13)
+summary(PEsAttentionDeficits$del_item1)
+table(PEsAttentionDeficits$del_item1)
+# 1    2    3    5 
+#2856  3   689  107 
+
+#Delusions item 2
+summary(PEsAttentionDeficits$delusions2_c_13)
+# No             No / Yes, probably                  Yes, probably 
+# 3447                 0                                  171 
+# Yes, probably / Yes, certainly                    Yes, certainly                           NA's 
+#              0                                          43                                 6241 
+PEsAttentionDeficits$del_item2 <-as.numeric(PEsAttentionDeficits$delusions2_c_13)
+summary(PEsAttentionDeficits$del_item2)
+table(PEsAttentionDeficits$del_item2)
+#   1    3    5 
+# 3447  171   43
+
+#Delusions item 3
+summary(PEsAttentionDeficits$delusions3_c_13)
+# No             No / Yes, probably                  Yes, probably 
+# 2815                   3                                 629 
+# Yes, probably / Yes, certainly                     Yes, certainly                           NA's 
+#                0                                        213                                6242 
+PEsAttentionDeficits$del_item3 <-as.numeric(PEsAttentionDeficits$delusions3_c_13)
+summary(PEsAttentionDeficits$del_item3)
+table(PEsAttentionDeficits$del_item3)
+#  1    2    3    5 
+# 2815  3   629  213
+
+#Delusions item 4
+summary(PEsAttentionDeficits$delusions4_c_13)
+# No             No / Yes, probably                  Yes, probably 
+# 3295                 1                                 298 
+# Yes, probably / Yes, certainly                    Yes, certainly                           NA's 
+#             0                                           67                                  6241
+PEsAttentionDeficits$del_item4 <-as.numeric(PEsAttentionDeficits$delusions4_c_13)
+summary(PEsAttentionDeficits$del_item4)
+table(PEsAttentionDeficits$del_item4)
+#  1    2    3    5 
+# 3295  1   298   67
+
+#Delusions item 5
+summary(PEsAttentionDeficits$delusions5_c_13)
+# No             No / Yes, probably                  Yes, probably 
+# 3580                   1                               65 
+# Yes, probably / Yes, certainly                   Yes, certainly                           NA's 
+#              0                                        12                                  6244
+PEsAttentionDeficits$del_item5 <-as.numeric(PEsAttentionDeficits$delusions5_c_13)
+summary(PEsAttentionDeficits$del_item5)
+table(PEsAttentionDeficits$del_item5)
+#  1    2    3    5 
+# 3580  1    65   12
+
+#Delusions item 6
+summary(PEsAttentionDeficits$delusions6_c_13)
+# No             No / Yes, probably                  Yes, probably 
+# 3110                   2                               410 
+# Yes, probably / Yes, certainly                   Yes, certainly                           NA's 
+#              0                                        134                                 6246
+PEsAttentionDeficits$del_item6 <-as.numeric(PEsAttentionDeficits$delusions6_c_13)
+summary(PEsAttentionDeficits$del_item6)
+table(PEsAttentionDeficits$del_item6)
+# 1     2    3    5 
+# 3110  2   410  134
+
+# Classification severity delusions
+PEsAttentionDeficits$del_severity14[PEsAttentionDeficits$del14 == 0] <- 0
+PEsAttentionDeficits$del_severity14[PEsAttentionDeficits$del14 > 0] <- 1
+PEsAttentionDeficits$del_severity14[PEsAttentionDeficits$del14 > 3 & (PEsAttentionDeficits$del_item1 >= 4 | PEsAttentionDeficits$del_item2 >= 4 | PEsAttentionDeficits$del_item3 >= 4 | PEsAttentionDeficits$del_item4 >= 4 | PEsAttentionDeficits$del_item5 >= 4 | PEsAttentionDeficits$del_item6 >= 4)] <- 2
+table(PEsAttentionDeficits$del_severity14) 
+PEsAttentionDeficits$del_severity14_v2[PEsAttentionDeficits$del14 == 0] <- 0
+PEsAttentionDeficits$del_severity14_v2[PEsAttentionDeficits$del14 > 0] <- 1
+PEsAttentionDeficits$del_severity14_v2[PEsAttentionDeficits$del14 > 0 & (PEsAttentionDeficits$del_item1 >= 4 | PEsAttentionDeficits$del_item2 >= 4 | PEsAttentionDeficits$del_item3 >= 4 | PEsAttentionDeficits$del_item4 >= 4 | PEsAttentionDeficits$del_item5 >= 4 | PEsAttentionDeficits$del_item6 >= 4)] <- 2
+table(PEsAttentionDeficits$del_severity14_v2) 
+# After rule assigning 2 when del14 > 3:        # After rule assigning 2 when del14 > 0 [del_severity14_v2]:
+#   0       1       2                           #   0       1       2 
+#   2027    1436    196  (5.4%)                 #   2027    1179    453 (12.4%)
+
+tapply(PEsAttentionDeficits$sum_att_36m, PEsAttentionDeficits$del_severity14, count, na.rm = TRUE)
+table(PEsAttentionDeficits$sum_att_36m, PEsAttentionDeficits$del_severity14)
+table(DatasetPROP$del_severity14)
+
+PEsAttentionDeficits$del_severity14_f[PEsAttentionDeficits$del_severity14 == 0] <- "Absent"
+PEsAttentionDeficits$del_severity14_f[PEsAttentionDeficits$del_severity14 == 1] <- "Mild"
+PEsAttentionDeficits$del_severity14_f[PEsAttentionDeficits$del_severity14 == 2] <- "Severe"
+table(PEsAttentionDeficits$del_severity14_f)
+# Absent Mild  Severe 
+# 2027   1436   196
+PEsAttentionDeficits$del_severity14_f_v2[PEsAttentionDeficits$del_severity14_v2 == 0] <- "Absent"
+PEsAttentionDeficits$del_severity14_f_v2[PEsAttentionDeficits$del_severity14_v2 == 1] <- "Mild"
+PEsAttentionDeficits$del_severity14_f_v2[PEsAttentionDeficits$del_severity14_v2 == 2] <- "Severe"
+table(PEsAttentionDeficits$del_severity14_f_v2)
+# Absent   Mild Severe 
+# 2027   1179    453
+
+## Combined PE scale @14 (hallucinations + delusions)
+table(PEsAttentionDeficits$hal_severity14,PEsAttentionDeficits$del_severity14_f)
+#           Absent  Mild    Severe
+# Absent    1836    1155      110     = 3101
+# Mild      115      193      56      = 364
+# Severe      6       28      24      = 58
+#             =       =       =       
+#            1957     1376    190   Total = 3523
+table(PEsAttentionDeficits$hal_severity14,PEsAttentionDeficits$del_severity14_f_v2)
+#         Absent Mild   Severe
+# Absent  1836   963     302          = 3101
+# Mild    115    150     99           = 364
+# Severe  6      19      33           = 58
+#         =      =       =
+#         1957  1132     434    Total = 3523
+
+PEsAttentionDeficits$PE_severity14 <- NA
+PEsAttentionDeficits$PE_severity14[PEsAttentionDeficits$hal_severity14 == "Absent" & PEsAttentionDeficits$del_severity14_f == "Absent"] <- "Absent"
+PEsAttentionDeficits$PE_severity14[PEsAttentionDeficits$hal_severity14 == "Mild" | PEsAttentionDeficits$del_severity14_f == "Mild"] <- "Mild"
+PEsAttentionDeficits$PE_severity14[PEsAttentionDeficits$hal_severity14 == "Severe" | PEsAttentionDeficits$del_severity14_f == "Severe"] <- "Severe"
+PEsAttentionDeficits$PE_severity14 <- ifelse(is.na(PEsAttentionDeficits$hal_severity14) | is.na(PEsAttentionDeficits$del_severity14_f), NA, PEsAttentionDeficits$PE_severity14)
+barchart(PEsAttentionDeficits$PE_severity14)
+table(PEsAttentionDeficits$PE_severity14)
+# Absent   Mild   Severe 
+# 1836     1463    224 (8.88%)
+
+PEsAttentionDeficits$PE_severity14v2 <- NA
+PEsAttentionDeficits$PE_severity14v2[PEsAttentionDeficits$hal_severity14 == "Absent" & PEsAttentionDeficits$del_severity14_f_v2 == "Absent"] <- "Absent"
+PEsAttentionDeficits$PE_severity14v2[PEsAttentionDeficits$hal_severity14 == "Mild" | PEsAttentionDeficits$del_severity14_f_v2 == "Mild"] <- "Mild"
+PEsAttentionDeficits$PE_severity14v2[PEsAttentionDeficits$hal_severity14 == "Severe" | PEsAttentionDeficits$del_severity14_f_v2 == "Severe"] <- "Severe"
+PEsAttentionDeficits$PE_severity14v2 <- ifelse(is.na(PEsAttentionDeficits$hal_severity14) | is.na(PEsAttentionDeficits$del_severity14_f_v2), NA, PEsAttentionDeficits$PE_severity14v2)
+barchart(PEsAttentionDeficits$PE_severity14v2)
+table(PEsAttentionDeficits$PE_severity14v2)
+# Absent   Mild   Severe 
+# 1836     1228    459 (13.03%)
